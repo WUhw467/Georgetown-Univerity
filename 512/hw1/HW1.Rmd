@@ -6,11 +6,14 @@ output: html_document
 ---
 
 # 2.4
+## 4
+### a
+#### 
 
 ## 8
 ### a
 ```{r}
-college <- read.csv('/Users/hengxinwu/Desktop/512/Georgetown-Univerity/512/College.csv')
+college <- read.csv('College.csv')
 ```
 
 ### b
@@ -32,6 +35,7 @@ summary(college)
 
 #### ii
 ```{r}
+college[,1] = as.numeric(factor(college[,1]))
 pairs(college[, 1:10])
 ```
 
@@ -77,6 +81,169 @@ boxplot(college$Outstate ~ college$Elite, main = "Outstate versus Elite", xlab =
 ```
 
 ## 9
+### a
+```{r}
+library(ISLR)
+data(Auto)
+```
+
+```{r}
+str(Auto)
+```
+
+```{r}
+pairs(Auto)
+```
+
+### b
+```{r}
+cor(Auto[1:8])
+```
+
+### c
+```{r}
+lm1 <- lm(mpg ~ . - name, data = Auto)
+summary(lm1)
+```
+
+#### i
+#### Because the p-value is 2.2e-16 which is less than 0.05, there is a relationship between the predictors and the re- sponse
+
+#### ii
+#### displacement, weight, year and origin have a statistically significant relationship to the response
+
+#### iii
+#### Holding other predictors constant, with 1 unit increase in year will incease 0.750773 in mpg.
+
+### d
+```{r}
+par(mfrow = c(2, 2))
+plot(lm1)
+```
+
+#### The residual plot doesn't show any large outliers, the leverage plot shows that there is a large leverage point 14.
+
+### e
+```{r}
+lm2 <- lm(mpg ~ cylinders*displacement + horsepower*weight + acceleration:year + acceleration:origin, data = Auto)
+summary(lm2)
+```
+
+#### The interaction between cylinder and displacement, horsepower:weight, acceleration and year are significant.
+
+### f
+```{r}
+par(mfrow = c(2, 2))
+plot(log(Auto$horsepower), Auto$mpg)
+plot(sqrt(Auto$horsepower), Auto$mpg)
+plot((Auto$horsepower)^2, Auto$mpg)
+```
+
+#### by transformation, horsepower shows a more linear relationship with mpg.
+
+## 10
+```{r}
+data("Carseats")
+```
+
+```{r}
+Carseats
+```
+
+### a
+```{r}
+lm3 <- lm(Sales~Price + Urban + US, data = Carseats)
+summary(lm3)
+```
+
+### b
+#### Price: with 1 unit increase in Price will decrease 0.054459 in Sales. Urban: if it is Urban will decrease 0.021916 in Sales. US: If the US is yes will cause 1.200573 increase in Sales.
+
+### c
+#### Sales = 13.043469 - 0.054459*Price - 0.021916*Urban + 1.200573*US, with Urban=1 if the store is in an urban location and 0 if not, and US=1 if the store is in the US and 0 if not.
+
+## 14
+### a
+```{r}
+set.seed(1)
+x1 <- runif(100)
+x2 <- 0.5 * x1 + rnorm(100) / 10
+y <- 2 + 2 * x1 + 0.3 * x2 + rnorm(100)
+```
+
+#### y = 2 + 2*X1 + 0.3*X2 + ε with ε ~ N(0,1).Regression Coefficients are 2,  2 and 0.3
+
+### b
+```{r}
+cor(x1, x2)
+plot(x1, x2)
+```
+
+### c
+```{r}
+lm4 <- lm(y ~ x1 + x2)
+summary(lm4)
+```
+
+#### βˆ0 is 2.1305, βˆ1 is 1.4396, and βˆ2 is 1.0097. βˆ0 is close to beta 0, and  βˆ1, βˆ2 is different than what we have in a. We can reject the H0:beta 1 = 0 because the p-value is less than 0.05, we can't reject H0:beta 2 = 0 because the p-value is large than 0.05.
+
+### d
+```{r}
+lm5 <- lm(y ~ x1)
+summary(lm5)
+```
+#### we can reject the H0 beacuse the p-value is less than 0.05
+
+### e
+```{r}
+lm6 <- lm(y ~ x2)
+summary(lm6)
+```
+
+#### We can reject the H0 because the p-value is less than 0.05
+
+### f
+#### No, the results obtained in (c)–(e) don't contradict each other. In c, the x1 is significant and x2 isn't significant, but the reason is that x1 and x2 is highly correlate with each other. So, when we treat them seperately it is possible that both of them are significant.
+
+### g 
+```{r}
+x1 <- c(x1, 0.1)
+x2 <- c(x2, 0.8)
+y <- c(y, 6)
+```
+
+```{r}
+lm7 <- lm(y ~ x1 + x2)
+summary(lm7)
+```
+
+```{r}
+lm8 <- lm(y ~ x1)
+summary(lm8)
+```
+
+```{r}
+lm9 <- lm(y ~ x2)
+summary(lm9)
+```
+
+```{r}
+par(mfrow = c(2, 2))
+plot(lm7)
+```
+
+```{r}
+par(mfrow = c(2, 2))
+plot(lm8)
+```
+
+```{r}
+par(mfrow = c(2, 2))
+plot(lm9)
+```
+
+#### For the lm7, the last point is a high-leverage point. For the lm8, the last point is an outlier. For the lm9, the last point is a high leverage point.
+
 
 
 
